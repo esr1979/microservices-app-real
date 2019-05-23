@@ -1,0 +1,146 @@
+    Services:
+    Catalog
+    Customer
+    Stock
+    Shipment
+    DeliveryMan
+    Orders
+
+
+Use Cases:
+    Catalog
+        CreateNewProduct
+        ReadProduct
+        ReadAllProducts
+        ReadMetrics
+        StockHasBeenReservedForThisProduct
+        StockHasBeenAddedForThisProduct
+        StockIsOverForThisProduct
+    Customer
+        CreateNewCustomer
+        AddCreditToThisCustomer
+        ReadCustomer
+        ReadAllCustomers
+        CheckAndReserveOrRejectCreditForThisUser
+    Stock
+        AddStockToProduct
+        ReadStock
+        ReadAllStock
+        CheckAndReserveOrRejectStockForThisProduct
+        NewProductHasBeenAdded
+    Shipment
+        StartShipment
+        EndShipment
+        ReadShipment
+        ReadAllShipment
+        NewOrderConfirmed
+        StockReservedForThisShipment
+        StockRejectedForThisShipment
+        StockAddedForThisProduct
+        DeliveryManAvailableForThisShipment
+        DeliveryManNotAvailableForThisShipment
+    DeliveryMan
+        HireNewDeliveryMan
+        ReadDeliveryMan
+        ReadAllDeliveryMan
+        ShipmentIsReadyReserveOrRejectDeliveryMan
+        ShipmentFinish
+    Order:
+        CreateNewOrder
+        ReadOrder
+        ReadAllOrders
+        CustomerCreditValidated
+        CustomerCreditRejected
+        CustomerCreditChanged
+
+
+
+Domain:
+    Order: id, productId, CustomerId, Price
+    Catalog(Product): id, title, description
+            +CatalogMetrics
+    customer: id, name, credit
+    DeliveryMan: id, name, shipmentId
+    Shipment: id, product, deliveryMan, status, notes, incidences
+    Stock: ProductId, stock
+
+API:
+    Catalog:
+        POST: api/v1/catalogs Body: CreateProductRequest Response: CreateProductResponse
+        GET: api/v1/catalogs Response: ReadProductListResponse
+        GET: api/v1/catalogs/{id} Response: ReadProductResponse
+        GET: api/v1/catalogs/metrics ReadProductMetricsResponse
+    Customer
+        POST: api/v1/customers/ Body: CreateCustomerRequest Response: CreateCustomerResponse
+        POST: api/v1/customers/{id]/credit Body: AddCreditCustomerRequest Response: AddCreditCustomerResponse
+        GET: api/v1/customers/{id} Response: ReadCustomerResponse
+        GET: api/v1/customers/ Response: ReadCustomerListResponse
+    Stock
+        POST: api/v1/stocks/ Body: AddStockRequest Response: AddStockResponse
+        GET: api/v1/stocks/{id} Response: ReadStockResponse
+        GET: api/v1/stocks/ Response: ReadStockListResponse
+    Shipment
+        PUT: api/v1/shipments/{id]/start Body: StartShipmentRequest
+        PUT: api/v1/shipments/{id}/end Body: EndShipmentRequest
+        GET: api/v1/shipments/{id} Response: ReadShipmentResponse
+        GET: api/v1/shipments/ Response: ReadShipmentListResponse
+    DeliveryMan
+        POST: api/v1/deliveryMen/ Body: HireDeliveryManRequest Response: HireDeliveryManResponse
+        GET: api/v1/deliveryMen/{id} Response: ReadDeliveryManResponse
+        GET: api/v1/deliveryMen/ Response: ReadDeliveryManListResponse
+    Order
+        POST: api/v1/orders/ Body: CreateOrderRequest Response: CreateOrderResponse
+        GET: api/v1/orders/{id} Response: ReadOrderResponse
+        GET: api/v1/orders/ Response: ReadOrderListResponse
+
+
+
+
+
+
+
+
+
+
+
+Events:
+    ProductCreatedEvent [CreateProductRequest]
+    CustomerCreditChangedEvent [AddCreditCustomerRequest]
+    StockAddedEvent [AddStockRequest]
+    ShipmentReadyEvent [StartShipmentRequest]
+    ShipmentEndedEvent [EndShipmentRequest]
+    DeliveryManFreeEvent [HireDeliveryManRequest]
+    OrderCreatedEvent [CreateOrderRequest]
+
+Order
+    (1)CustomerCreditReservedEvent -> OrderConfirmedEvent
+    (2)CustomerCreditRejectedEvent
+    (3)CustomerCreditChangedEvent -> OrderCreatedEvent
+Customer
+    (1) OrderCreatedEvent -> CustomerCreditReservedEvent
+                          -> CustomerCreditRejectedEvent
+Shipment
+    (1)OrderConfirmedEvent -> ShipmentCreatedEvent
+    (2)StockReservedEvent -> ShipmentAvailableEvent
+    (3)StockRejectedEvent
+    (4)StockAddedEvent -> ShipmentCreatedEvent
+    (5)DeliveryManFreeEvent -> ShipmentReadyEvent (only shipment Ready)
+    (6)DeliveryManRejected
+Stock
+    (1)ShipmentCreatedEvent -> StockReserved
+                             -> StockRejected
+    (2)ProductCreatedEvent -> [Create an entry with stock 0]
+DeliveryMan
+    (1) ShipmentReadyEvent -> DeliveryManReserved
+                           -> DeliveryManRejected
+    (2) ShipmentEndedEvent -> DeliveryManFreeEvent
+
+Catalog
+    (1)StockReserved -> [Metrics/Alarm]
+    (2)StockAddedEvent -> [Alarm remove]
+    (3)StockRejected -> [Alarm Creation]
+
+
+    OrderCreatedEvent -> CustomerCreditReserved -> OrderConfirmed -> ShipmentCreatedEvent -> StockReserved -> ShipmentCreatedEvent -> DeliveryMan
+                      -> CustomerCreditRejected                                           -> StockRejected
+

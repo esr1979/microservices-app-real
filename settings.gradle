@@ -1,0 +1,11 @@
+rootProject.name = 'microservices-app'
+
+include 'common-library'
+
+include 'catalog-service'
+include 'stock-service'
+include 'customer-service'
+include 'delivery-man-service'
+include 'shipment-service'
+include 'order-service'
+
