@@ -10,8 +10,7 @@ public class HireNewDeliveryManIMP implements HireNewDeliveryManIFC {
     public HireDeliveryManResponse HireNewDeliveryMan(){
 
         HireDeliveryManResponse response = new HireDeliveryManResponse();
-
-
+        response.setId("Id created");
         return response;
 
 
