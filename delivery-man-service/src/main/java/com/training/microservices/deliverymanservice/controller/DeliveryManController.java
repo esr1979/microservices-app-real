@@ -6,6 +6,7 @@ import com.training.microservices.common.deliveryMan.ReadDeliveryManListResponse
 import com.training.microservices.common.deliveryMan.ReadDeliveryManResponse;
 import com.training.microservices.deliverymanservice.service.HireNewDeliveryManIFC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PreUpdate;
@@ -22,13 +23,14 @@ public class DeliveryManController {
     }
 
     @PostMapping(path="/deliveryMen")
+    @ResponseStatus(HttpStatus.CREATED)
     public HireDeliveryManResponse hireDeliveryMan (@RequestBody HireDeliveryManRequest hireDeliveryManRequest) {
-        return hireNewDeliveryManIFC.HireNewDeliveryMan();
+        return hireNewDeliveryManIFC.HireNewDeliveryMan(hireDeliveryManRequest);
     }
 
     @GetMapping(path="/deliveryMen/{id}")
     public ReadDeliveryManResponse readDeliveryMan (@PathVariable String id){
-        return hireNewDeliveryManIFC.ReadDeliveryMan();
+        return hireNewDeliveryManIFC.ReadDeliveryMan(id);
     }
 
     @GetMapping(path="/deliveryMen")

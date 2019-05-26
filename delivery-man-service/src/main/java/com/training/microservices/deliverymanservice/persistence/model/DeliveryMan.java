@@ -7,7 +7,6 @@ import java.util.Objects;
 public class DeliveryMan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
 
@@ -15,7 +14,7 @@ public class DeliveryMan {
     private String name;
 
     @Column
-    private Long shipmentNumber;
+    private String shipmentNumber;
 
     public DeliveryMan(){
         super();
@@ -41,11 +40,11 @@ public class DeliveryMan {
         this.name = name;
     }
 
-    public Long getShipmentNumber() {
+    public String getShipmentNumber() {
         return shipmentNumber;
     }
 
-    public void setShipmentNumber(Long shipmentNumber) {
+    public void setShipmentNumber(String shipmentNumber) {
         this.shipmentNumber = shipmentNumber;
     }
 

@@ -3,10 +3,10 @@ package com.training.microservices.deliverymanservice.persistence.repository;
 import com.training.microservices.deliverymanservice.persistence.model.DeliveryMan;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface DeliveryManRepository extends CrudRepository<DeliveryMan, String> {
 
-    List<DeliveryMan> findByName(String name);
+    Optional<DeliveryMan> findById(String id);
 
 }
