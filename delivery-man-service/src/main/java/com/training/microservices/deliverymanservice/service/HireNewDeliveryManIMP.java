@@ -21,52 +21,28 @@ public class HireNewDeliveryManIMP implements HireNewDeliveryManIFC {
     DeliveryManRepository deliveryManRepository;
 
     @Override
-    public HireDeliveryManResponse HireNewDeliveryMan(HireDeliveryManRequest hireDeliveryManRequest){
-
-        HireDeliveryManResponse response = new HireDeliveryManResponse();
+    public DeliveryMan HireNewDeliveryMan(HireDeliveryManRequest hireDeliveryManRequest){
         DeliveryMan createdMan;
         DeliveryMan deliveryMan = new DeliveryMan();
         deliveryMan.setId(IdGenerator.generateId());
         deliveryMan.setName(hireDeliveryManRequest.getName());
         createdMan = deliveryManRepository.save(deliveryMan);
-        response.setId(createdMan.getId());
-        return response;
+        return createdMan;
 
     }
 
     @Override
-    public ReadDeliveryManResponse ReadDeliveryMan(String id){
-        ReadDeliveryManResponse response = new ReadDeliveryManResponse();
+    public Optional<DeliveryMan> ReadDeliveryMan(String id){
         Optional<DeliveryMan> readMan;
         readMan = deliveryManRepository.findById(id);
-
-        if (readMan.isPresent()){
-            response.setId(readMan.get().getId());
-            response.setName(readMan.get().getName());
-            response.setShipmentId(readMan.get().getShipmentNumber());
-        }
-
-        return response;
+        return readMan;
     }
 
     @Override
-    public ReadDeliveryManListResponse ReadDeliveryMenList(){
-
-        ReadDeliveryManListResponse response = new ReadDeliveryManListResponse();
-        List<ReadDeliveryManResponse> deliveryMenList = new ArrayList<>();
+    public Iterable<DeliveryMan>  ReadDeliveryMenList(){
         Iterable<DeliveryMan> readMenList;
         readMenList = deliveryManRepository.findAll();
-
-        for (DeliveryMan dM : readMenList){
-            ReadDeliveryManResponse theMan = new ReadDeliveryManResponse();
-            theMan.setId(dM.getId());
-            theMan.setName(dM.getName());
-            theMan.setShipmentId(dM.getShipmentNumber());
-            deliveryMenList.add(theMan);
-        }
-
-        response.setDeliveryMen(deliveryMenList);
-        return response;
+        return readMenList;
     }
 
 }
