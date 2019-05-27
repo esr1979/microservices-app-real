@@ -1,7 +1,5 @@
 package com.training.microservices.deliverymanservice.controller;
 
-
-
 import com.training.microservices.common.deliveryMan.HireDeliveryManRequest;
 import com.training.microservices.common.deliveryMan.HireDeliveryManResponse;
 import com.training.microservices.common.deliveryMan.ReadDeliveryManListResponse;
@@ -39,22 +37,27 @@ public class DeliveryManController {
 
     @GetMapping(path="/deliveryMen/{id}")
     public ResponseEntity<ReadDeliveryManResponse> readDeliveryMan (@PathVariable String id) {
-        ReadDeliveryManResponse response = new ReadDeliveryManResponse();
-        ResponseEntity<ReadDeliveryManResponse> respEntity = new ResponseEntity<ReadDeliveryManResponse>(response, HttpStatus.OK);
+        ReadDeliveryManResponse response;
+        //ResponseEntity<ReadDeliveryManResponse> respEntity = new ResponseEntity<ReadDeliveryManResponse>(response, HttpStatus.OK);
         Optional<DeliveryMan> readMan;
         readMan = hireNewDeliveryManIFC.ReadDeliveryMan(id);
 
+
         if (readMan.isPresent()) {
             System.out.println("READ THE FOLLOWING ID --> " + readMan.get().getId());
-            response.setId(readMan.get().getId());
-            response.setName(readMan.get().getName());
-            response.setShipmentId(readMan.get().getShipmentNumber());
+            //Builder Example
+            response = ReadDeliveryManResponse.builder()
+                    .id(readMan.get().getId())
+                    .name(readMan.get().getName())
+                    .shipmentId(readMan.get().getShipmentNumber())
+                    .build();
             //return new ResponseEntity<ReadDeliveryManResponse>(response, HttpStatus.OK);
-            //return ResponseEntity.ok().body(response);
-            return respEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.ok().body(response);
+            //return respEntity.status(HttpStatus.OK).body(response);
         } else {
             //return new ResponseEntity<ReadDeliveryManResponse>(response, HttpStatus.NOT_FOUND);
-            return respEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.notFound().build();
+            //return respEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
@@ -65,10 +68,13 @@ public class DeliveryManController {
         Iterable<DeliveryMan> readMenList = hireNewDeliveryManIFC.ReadDeliveryMenList();
 
         for (DeliveryMan dM : readMenList){
-            ReadDeliveryManResponse theMan = new ReadDeliveryManResponse();
-            theMan.setId(dM.getId());
-            theMan.setName(dM.getName());
-            theMan.setShipmentId(dM.getShipmentNumber());
+            ReadDeliveryManResponse theMan;
+            theMan = ReadDeliveryManResponse
+                    .builder()
+                    .id(dM.getId())
+                    .name(dM.getName())
+                    .shipmentId(dM.getShipmentNumber())
+                    .build();
             deliveryMenList.add(theMan);
         }
 
