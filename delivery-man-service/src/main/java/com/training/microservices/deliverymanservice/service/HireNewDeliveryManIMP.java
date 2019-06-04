@@ -45,4 +45,12 @@ public class HireNewDeliveryManIMP implements HireNewDeliveryManIFC {
         return readMenList;
     }
 
+    @Override
+    public void DeleteDeliveryMan(String id){
+
+        deliveryManRepository.deleteById(id);
+
+    }
+
+
 }

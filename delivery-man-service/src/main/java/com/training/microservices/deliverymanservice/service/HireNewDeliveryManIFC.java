@@ -13,5 +13,6 @@ public interface HireNewDeliveryManIFC {
     public DeliveryMan HireNewDeliveryMan (HireDeliveryManRequest hireDeliveryManRequest);
     public Optional<DeliveryMan> ReadDeliveryMan(String id);
     public Iterable<DeliveryMan>  ReadDeliveryMenList();
+    public void DeleteDeliveryMan(String id);
 
 }

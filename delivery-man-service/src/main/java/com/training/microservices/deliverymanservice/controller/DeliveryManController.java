@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping(path="/api/v1")
 @CrossOrigin("*")
 public class DeliveryManController {
@@ -83,6 +82,13 @@ public class DeliveryManController {
         response.setDeliveryMen(deliveryMenList);
 
         return response;
+    }
+
+    @DeleteMapping(path = "/deliveryMen/{stringid}")
+    public void DeleteDeliveryMan(@PathVariable(name = "stringid") String id) {
+
+        hireNewDeliveryManIFC.DeleteDeliveryMan(id);
+
     }
 
 
