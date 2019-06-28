@@ -1,9 +1,7 @@
 package com.training.microservices.deliverymanservice.controller;
 
-import com.training.microservices.common.deliveryMan.HireDeliveryManRequest;
-import com.training.microservices.common.deliveryMan.HireDeliveryManResponse;
-import com.training.microservices.common.deliveryMan.ReadDeliveryManListResponse;
-import com.training.microservices.common.deliveryMan.ReadDeliveryManResponse;
+import com.rabbitmq.client.AMQP;
+import com.training.microservices.common.deliveryMan.*;
 import com.training.microservices.deliverymanservice.persistence.model.DeliveryMan;
 import com.training.microservices.deliverymanservice.service.HireNewDeliveryManIFC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +89,17 @@ public class DeliveryManController {
 
     }
 
+    @PutMapping(path = "/deliveryMen/{stringid}")
+    public UpdateDeliveryManResponse updateDeliveryMan (@RequestBody UpdateDeliveryManRequest updateDeliveryManRequest,
+                                                        @PathVariable(name = "stringid") String stringid){
+
+            UpdateDeliveryManResponse response = new UpdateDeliveryManResponse();
+            DeliveryMan updatedMan = hireNewDeliveryManIFC.UpdateDeliveryMan(updateDeliveryManRequest);
+            response.setId(updatedMan.getId());
+            response.setName(updatedMan.getName());
+            response.setShipmentId(updatedMan.getShipmentNumber());
+            return response;
+
+    }
 
 }

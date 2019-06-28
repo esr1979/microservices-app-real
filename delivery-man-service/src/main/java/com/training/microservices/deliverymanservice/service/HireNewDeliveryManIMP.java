@@ -1,9 +1,6 @@
 package com.training.microservices.deliverymanservice.service;
 
-import com.training.microservices.common.deliveryMan.HireDeliveryManRequest;
-import com.training.microservices.common.deliveryMan.HireDeliveryManResponse;
-import com.training.microservices.common.deliveryMan.ReadDeliveryManListResponse;
-import com.training.microservices.common.deliveryMan.ReadDeliveryManResponse;
+import com.training.microservices.common.deliveryMan.*;
 import com.training.microservices.common.utils.IdGenerator;
 import com.training.microservices.deliverymanservice.persistence.model.DeliveryMan;
 import com.training.microservices.deliverymanservice.persistence.repository.DeliveryManRepository;
@@ -51,6 +48,20 @@ public class HireNewDeliveryManIMP implements HireNewDeliveryManIFC {
         deliveryManRepository.deleteById(id);
 
     }
+
+    @Override
+    public DeliveryMan UpdateDeliveryMan(UpdateDeliveryManRequest updateDeliveryManRequest){
+
+        DeliveryMan updatedMan;
+        DeliveryMan deliveryMan = new DeliveryMan();
+        deliveryMan.setId(updateDeliveryManRequest.getId());
+        deliveryMan.setName(updateDeliveryManRequest.getName());
+        deliveryMan.setShipmentNumber(updateDeliveryManRequest.getShipmentId());
+        updatedMan = deliveryManRepository.save(deliveryMan);
+        return updatedMan;
+
+    }
+
 
 
 }
